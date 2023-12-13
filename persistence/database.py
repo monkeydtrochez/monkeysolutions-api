@@ -1,10 +1,8 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from dotenv import load_dotenv
 import os
+from flask_marshmallow import Marshmallow
+from flask_sqlalchemy import SQLAlchemy
 
-load_dotenv()
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 POSTGRES_USER = os.environ.get('POSTGRES_USER')
 POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
@@ -13,15 +11,12 @@ POSTGRES_DATABASE = os.environ.get('POSTGRES_DATABASE')
 
 SQLALCHEMY_DATABASE_URL = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DATABASE}'
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-Base = declarative_base()
+def initialize_db(app):
+    # Init db
+    db = SQLAlchemy(app)
 
+    # Init marshmallow
+    ma = Marshmallow(app)
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    except:
-        db.close()
+    return db, ma
