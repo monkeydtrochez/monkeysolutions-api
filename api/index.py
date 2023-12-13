@@ -45,6 +45,11 @@ user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
 
+@app.route('/', methods=['GET'])
+def hello_world():
+    return 'Hello world from Monkey Solutions!'
+
+
 # Get user by id
 @app.route('/api/v1/user', methods=['GET'])
 def get_users():
